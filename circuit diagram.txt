@@ -1,0 +1,232 @@
+🔌 Smart Waste Management System - Circuit Diagram
+Component Connections
+Arduino UNO/ESP32 Pin Configuration
+SENSORS:
+├── IR Sensor (Human Detection)
+│   ├── VCC → 5V
+│   ├── GND → GND
+│   └── OUT → Digital Pin 2
+│
+├── Ultrasonic Sensor HC-SR04 (Fill Level)
+│   ├── VCC → 5V
+│   ├── GND → GND
+│   ├── Trig → Digital Pin 3
+│   └── Echo → Digital Pin 4
+│
+├── DHT11 (Temperature & Humidity)
+│   ├── VCC → 5V
+│   ├── GND → GND
+│   └── DATA → Digital Pin 5
+│
+├── MPU6050 (Accelerometer/Gyroscope)
+│   ├── VCC → 5V
+│   ├── GND → GND
+│   ├── SCL → A5 (Arduino UNO) / Pin 22 (ESP32)
+│   └── SDA → A4 (Arduino UNO) / Pin 21 (ESP32)
+│
+└── Soil Moisture Sensor (Waste Type Detection)
+    ├── VCC → 5V
+    ├── GND → GND
+    └── A0 → Analog Pin A0
+
+ACTUATORS:
+├── Servo Motor 1 (Lid Control)
+│   ├── VCC → 5V
+│   ├── GND → GND
+│   └── Signal → Digital Pin 12
+│
+├── Servo Motor 2 (Waste Sorting)
+│   ├── VCC → 5V
+│   ├── GND → GND
+│   └── Signal → Digital Pin 13
+│
+└── L298N Motor Driver (Mobility)
+    ├── VCC → 12V External Supply
+    ├── GND → GND (Common)
+    ├── ENA → Analog Pin A1
+    ├── IN1 → Analog Pin A2
+    ├── IN2 → Analog Pin A3
+    ├── IN3 → Analog Pin A4
+    ├── IN4 → Analog Pin A5
+    └── ENB → Connect to ENA
+
+DISPLAY & INDICATORS:
+├── 16x2 LCD with I2C Module
+│   ├── VCC → 5V
+│   ├── GND → GND
+│   ├── SCL → A5 (Share with MPU6050)
+│   └── SDA → A4 (Share with MPU6050)
+│
+├── LEDs (Status Indicators)
+│   ├── Green LED → Digital Pin 7 (+ 220Ω resistor)
+│   ├── Yellow LED → Digital Pin 8 (+ 220Ω resistor)
+│   ├── Red LED → Digital Pin 9 (+ 220Ω resistor)
+│   ├── Blue LED → Digital Pin 10 (+ 220Ω resistor)
+│   └── White LED → Digital Pin 11 (+ 220Ω resistor)
+│
+└── Buzzer (Active/Passive)
+    ├── Positive → Digital Pin 6
+    └── Negative → GND
+Power Supply Configuration
+Option 1: Arduino UNO Setup
+Power Distribution:
+├── Arduino UNO: USB/DC Jack (7-12V)
+├── Sensors (5V): Arduino 5V Pin
+├── Servos (5V): Arduino 5V Pin (or external 5V supply for heavy load)
+├── Motors: External 12V Supply through L298N
+└── LEDs: Arduino 5V through current limiting resistors
+Option 2: ESP32 Setup (Recommended for WiFi)
+Power Distribution:
+├── ESP32: USB/VIN (5V)
+├── Sensors (3.3V/5V): ESP32 3.3V or external 5V
+├── Level Shifters: For 5V sensors if using ESP32 3.3V
+├── Servos: External 5V supply recommended
+└── Motors: External 12V Supply through L298N
+Detailed Wiring Instructions
+1. Sensor Connections
+IR Sensor (Human Presence Detection)
+
+IR Sensor    →    Arduino
+VCC          →    5V
+GND          →    GND
+OUT          →    Digital Pin 2
+Ultrasonic Sensor HC-SR04 (Fill Level)
+
+HC-SR04      →    Arduino
+VCC          →    5V
+GND          →    GND
+Trig         →    Digital Pin 3
+Echo         →    Digital Pin 4
+DHT11 (Environmental Monitoring)
+
+DHT11        →    Arduino
+VCC          →    5V
+GND          →    GND
+DATA         →    Digital Pin 5
+MPU6050 (Tampering Detection)
+
+MPU6050      →    Arduino UNO    →    ESP32
+VCC          →    5V             →    3.3V
+GND          →    GND            →    GND
+SCL          →    A5             →    Pin 22
+SDA          →    A4             →    Pin 21
+Soil Moisture Sensor (Waste Classification)
+
+Moisture     →    Arduino
+VCC          →    5V
+GND          →    GND
+A0           →    Analog Pin A0
+2. Actuator Connections
+Servo Motors (Lid & Sorting Mechanism)
+
+Servo 1 (Lid)     →    Arduino
+Red (VCC)         →    5V (or external 5V)
+Brown (GND)       →    GND
+Orange (Signal)   →    Digital Pin 12
+
+Servo 2 (Sort)    →    Arduino
+Red (VCC)         →    5V (or external 5V)
+Brown (GND)       →    GND
+Orange (Signal)   →    Digital Pin 13
+L298N Motor Driver (Mobility)
+
+L298N        →    Arduino    →    Motors
+VCC          →    External 12V
+GND          →    GND (Common Ground)
+ENA          →    A1         →    Motor A Speed Control
+IN1          →    A2         →    Motor A Direction 1
+IN2          →    A3         →    Motor A Direction 2
+IN3          →    A4         →    Motor B Direction 1
+IN4          →    A5         →    Motor B Direction 2
+ENB          →    Connect to ENA (or separate PWM pin)
+OUT1/OUT2    →    Left Motor
+OUT3/OUT4    →    Right Motor
+3. Display & Indicator Connections
+16x2 LCD with I2C
+
+LCD I2C      →    Arduino UNO    →    ESP32
+VCC          →    5V             →    5V
+GND          →    GND            →    GND
+SCL          →    A5             →    Pin 22
+SDA          →    A4             →    Pin 21
+LED Status Indicators
+
+LED Color    →    Arduino Pin    →    Function
+Green        →    Pin 7          →    Normal/Low Fill
+Yellow       →    Pin 8          →    Medium Fill
+Red          →    Pin 9          →    Full/Alert
+Blue         →    Pin 10         →    Lid Open
+White        →    Pin 11         →    Wet Waste Detected
+
+Connection: Arduino Pin → 220Ω Resistor → LED (+) → LED (-) → GND
+Buzzer (Alert System)
+
+Buzzer       →    Arduino
+Positive     →    Digital Pin 6
+Negative     →    GND
+Circuit Layout Recommendations
+Breadboard Layout (Prototype)
+Breadboard Sections:
+├── Power Rails: 5V, 3.3V, GND distribution
+├── Sensor Section: All input sensors
+├── Display Section: LCD and LEDs
+├── Actuator Section: Servos and buzzer
+└── Communication: I2C devices on same bus
+PCB Layout (Final Implementation)
+PCB Zones:
+├── Power Section: Voltage regulators, filtering capacitors
+├── Microcontroller: Arduino/ESP32 with supporting components
+├── Sensor Interface: Input conditioning circuits
+├── Actuator Drivers: Motor drivers, servo connections
+└── Communication: I2C, UART, WiFi antenna (ESP32)
+Safety Considerations
+
+
+Electrical Safety
+Use appropriate current limiting resistors for LEDs
+Ensure proper ground connections for all components
+Use external power supply for high-current devices (motors, servos)
+Add flyback diodes for inductive loads
+Implement over-current protection
+Mechanical Safety
+Secure all connections to prevent disconnection during movement
+Use proper gauge wires for current requirements
+Implement emergency stop functionality
+Ensure servo movements are properly constrained
+Component Specifications
+
+
+Power Requirements
+Component         Current Draw    Voltage
+Arduino UNO       20-50mA         5V
+ESP32             80-260mA        3.3V/5V
+HC-SR04           15mA            5V
+DHT11             1-1.5mA         5V
+MPU6050           3.9mA           5V
+IR Sensor         20mA            5V
+Moisture Sensor   35mA            5V
+SG90 Servo        10-600mA        5V
+LCD 16x2          1-5mA           5V
+LEDs (each)       20mA            Forward voltage
+Buzzer            30mA            5V
+BO Motors         100-300mA       6-12V
+L298N             36mA            5V (logic)
+Total Power Budget
+Standby Mode:     ~200mA @ 5V
+Active Mode:      ~800mA @ 5V
+Peak Mode:        ~1.5A @ 5V + Motor current
+Troubleshooting Guide
+
+
+Common Issues
+I2C Communication Errors: Check SCL/SDA connections and pull-up resistors
+Servo Jitter: Use external 5V supply, check for power fluctuations
+Sensor Reading Errors: Verify power connections and pin assignments
+Motor Not Working: Check L298N enable pins and power supply
+LCD Not Displaying: Verify I2C address (usually 0x27 or 0x3F)
+Testing Procedures
+Test each sensor individually
+Verify power supply stability under load
+Check I2C device addresses using scanner
+Test servo movement range and positions
+Verify motor direction and speed control
